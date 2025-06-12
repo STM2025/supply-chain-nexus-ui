@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -12,95 +11,188 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Users, Plus, Edit, Trash2, Search, Shield } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
-const OrgUserManagement = () => {
+const OrgUserManagement = ({ organizationType = 'farmer' }) => {
   const { toast } = useToast();
   const [searchTerm, setSearchTerm] = useState('');
   const [filterRole, setFilterRole] = useState('all');
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
 
-  const orgUsers = [
-    {
-      id: 1,
-      name: 'Maria Gonzalez',
-      email: 'maria@greenvalley.com',
-      role: 'farm_owner',
-      status: 'active',
-      lastLogin: '2024-06-12 09:15',
-      modules: ['Farm Management', 'Supply Chain', 'Carbon Calculator'],
-      permissions: {
-        farms: ['create', 'view', 'read', 'edit', 'manage'],
-        fields: ['create', 'view', 'read', 'edit'],
-        products: ['view', 'read', 'approve']
-      }
-    },
-    {
-      id: 2,
-      name: 'John Smith',
-      email: 'john.smith@greenvalley.com',
-      role: 'field_supervisor',
-      status: 'active',
-      lastLogin: '2024-06-11 16:30',
-      modules: ['Farm Management'],
-      permissions: {
-        fields: ['view', 'read', 'edit'],
-        products: ['view']
-      }
-    },
-    {
-      id: 3,
-      name: 'Sarah Johnson',
-      email: 'sarah.j@greenvalley.com',
-      role: 'agronomist',
-      status: 'active',
-      lastLogin: '2024-06-12 08:45',
-      modules: ['Farm Management', 'Carbon Calculator'],
-      permissions: {
-        fields: ['view', 'read', 'manage'],
-        products: ['view', 'read']
-      }
-    },
-    {
-      id: 4,
-      name: 'Mike Davis',
-      email: 'mike.d@greenvalley.com',
-      role: 'farm_worker',
-      status: 'active',
-      lastLogin: '2024-06-10 14:20',
-      modules: ['Farm Management'],
-      permissions: {
-        fields: ['view'],
-        products: ['view']
-      }
-    },
-    {
-      id: 5,
-      name: 'Lisa Wong',
-      email: 'lisa.w@greenvalley.com',
-      role: 'harvest_manager',
-      status: 'pending',
-      lastLogin: '2024-06-09 12:00',
-      modules: ['Farm Management', 'Supply Chain'],
-      permissions: {
-        fields: ['view', 'read'],
-        products: ['create', 'view', 'read', 'approve']
-      }
+  const getOrgUsers = () => {
+    switch (organizationType) {
+      case 'farmer':
+        return [
+          {
+            id: 1,
+            name: 'Maria Gonzalez',
+            email: 'maria@greenvalley.com',
+            role: 'farm_owner',
+            status: 'active',
+            lastLogin: '2024-06-12 09:15',
+            modules: ['Farm Management', 'Supply Chain', 'Carbon Calculator'],
+            permissions: {
+              farms: ['create', 'view', 'read', 'edit', 'manage'],
+              fields: ['create', 'view', 'read', 'edit'],
+              products: ['view', 'read', 'approve']
+            }
+          },
+          {
+            id: 2,
+            name: 'John Smith',
+            email: 'john.smith@greenvalley.com',
+            role: 'field_supervisor',
+            status: 'active',
+            lastLogin: '2024-06-11 16:30',
+            modules: ['Farm Management'],
+            permissions: {
+              fields: ['view', 'read', 'edit'],
+              products: ['view']
+            }
+          }
+        ];
+      case 'processor':
+        return [
+          {
+            id: 1,
+            name: 'Raj Patel',
+            email: 'raj@freshprocess.com',
+            role: 'plant_manager',
+            status: 'active',
+            lastLogin: '2024-06-12 08:30',
+            modules: ['Processing Management', 'Quality Control'],
+            permissions: {
+              processing_plants: ['create', 'view', 'read', 'edit', 'manage'],
+              products: ['create', 'view', 'read', 'edit', 'control']
+            }
+          },
+          {
+            id: 2,
+            name: 'Nina Chen',
+            email: 'nina@freshprocess.com',
+            role: 'quality_manager',
+            status: 'active',
+            lastLogin: '2024-06-11 14:20',
+            modules: ['Quality Control'],
+            permissions: {
+              products: ['view', 'read', 'approve']
+            }
+          }
+        ];
+      case 'distributor':
+        return [
+          {
+            id: 1,
+            name: 'Aisha Khan',
+            email: 'aisha@quickdist.com',
+            role: 'warehouse_manager',
+            status: 'active',
+            lastLogin: '2024-06-12 07:45',
+            modules: ['Warehouse Management', 'Supply Chain'],
+            permissions: {
+              warehouses: ['create', 'view', 'read', 'edit', 'manage'],
+              supply_chain: ['view', 'read', 'approve']
+            }
+          },
+          {
+            id: 2,
+            name: 'Tom Wilson',
+            email: 'tom@quickdist.com',
+            role: 'inventory_planner',
+            status: 'active',
+            lastLogin: '2024-06-11 18:00',
+            modules: ['Inventory Tracking'],
+            permissions: {
+              warehouses: ['view', 'read', 'edit']
+            }
+          }
+        ];
+      case 'transporter':
+        return [
+          {
+            id: 1,
+            name: 'Li Wei',
+            email: 'li@fasttrans.com',
+            role: 'fleet_manager',
+            status: 'active',
+            lastLogin: '2024-06-12 06:30',
+            modules: ['Fleet Management', 'Route Optimization'],
+            permissions: {
+              vehicles: ['create', 'view', 'read', 'edit', 'manage'],
+              supply_chain: ['view', 'read']
+            }
+          },
+          {
+            id: 2,
+            name: 'Carlos Rodriguez',
+            email: 'carlos@fasttrans.com',
+            role: 'driver',
+            status: 'active',
+            lastLogin: '2024-06-11 20:15',
+            modules: ['Vehicle Tracking'],
+            permissions: {
+              vehicles: ['view']
+            }
+          }
+        ];
+      default:
+        return [];
     }
-  ];
+  };
 
-  const availableRoles = [
-    { id: 'farm_owner', name: 'Farm Owner', description: 'Full access to farm operations' },
-    { id: 'field_supervisor', name: 'Field Supervisor', description: 'Manage field operations' },
-    { id: 'agronomist', name: 'Agronomist', description: 'Crop and soil expertise' },
-    { id: 'farm_worker', name: 'Farm Worker', description: 'Basic field access' },
-    { id: 'harvest_manager', name: 'Harvest Manager', description: 'Manage harvest operations' }
-  ];
+  const getAvailableRoles = () => {
+    switch (organizationType) {
+      case 'farmer':
+        return [
+          { id: 'farm_owner', name: 'Farm Owner', description: 'Full access to farm operations' },
+          { id: 'field_supervisor', name: 'Field Supervisor', description: 'Manage field operations' },
+          { id: 'agronomist', name: 'Agronomist', description: 'Crop and soil expertise' },
+          { id: 'farm_worker', name: 'Farm Worker', description: 'Basic field access' },
+          { id: 'harvest_manager', name: 'Harvest Manager', description: 'Manage harvest operations' }
+        ];
+      case 'processor':
+        return [
+          { id: 'plant_manager', name: 'Plant Manager', description: 'Full processing plant control' },
+          { id: 'quality_manager', name: 'Quality Manager', description: 'Quality control and assurance' },
+          { id: 'production_supervisor', name: 'Production Supervisor', description: 'Supervise production lines' },
+          { id: 'operator', name: 'Operator', description: 'Machine operation' },
+          { id: 'maintenance_tech', name: 'Maintenance Technician', description: 'Equipment maintenance' }
+        ];
+      case 'distributor':
+        return [
+          { id: 'warehouse_manager', name: 'Warehouse Manager', description: 'Manage warehouse operations' },
+          { id: 'inventory_planner', name: 'Inventory Planner', description: 'Plan inventory distribution' },
+          { id: 'shipping_coordinator', name: 'Shipping Coordinator', description: 'Coordinate shipments' },
+          { id: 'warehouse_worker', name: 'Warehouse Worker', description: 'Basic warehouse tasks' }
+        ];
+      case 'transporter':
+        return [
+          { id: 'fleet_manager', name: 'Fleet Manager', description: 'Manage vehicle fleet' },
+          { id: 'dispatcher', name: 'Dispatcher', description: 'Route planning and dispatch' },
+          { id: 'driver', name: 'Driver', description: 'Vehicle operation' },
+          { id: 'maintenance_supervisor', name: 'Maintenance Supervisor', description: 'Vehicle maintenance oversight' }
+        ];
+      default:
+        return [];
+    }
+  };
 
-  const availableModules = [
-    'Farm Management',
-    'Supply Chain Management', 
-    'Carbon Calculator',
-    'Provenance Tracking'
-  ];
+  const getAvailableModules = () => {
+    switch (organizationType) {
+      case 'farmer':
+        return ['Farm Management', 'Supply Chain Management', 'Carbon Calculator', 'Provenance Tracking'];
+      case 'processor':
+        return ['Processing Management', 'Quality Control', 'Supply Chain Management', 'Carbon Calculator'];
+      case 'distributor':
+        return ['Warehouse Management', 'Inventory Tracking', 'Supply Chain Management', 'Transport Coordination'];
+      case 'transporter':
+        return ['Fleet Management', 'Route Optimization', 'Vehicle Tracking', 'Supply Chain Management'];
+      default:
+        return [];
+    }
+  };
+
+  const orgUsers = getOrgUsers();
+  const availableRoles = getAvailableRoles();
+  const availableModules = getAvailableModules();
 
   const getRoleColor = (role) => {
     const colors = {
@@ -108,7 +200,20 @@ const OrgUserManagement = () => {
       field_supervisor: 'bg-blue-100 text-blue-700',
       agronomist: 'bg-purple-100 text-purple-700',
       farm_worker: 'bg-gray-100 text-gray-700',
-      harvest_manager: 'bg-orange-100 text-orange-700'
+      harvest_manager: 'bg-orange-100 text-orange-700',
+      plant_manager: 'bg-red-100 text-red-700',
+      quality_manager: 'bg-indigo-100 text-indigo-700',
+      production_supervisor: 'bg-cyan-100 text-cyan-700',
+      operator: 'bg-yellow-100 text-yellow-700',
+      maintenance_tech: 'bg-pink-100 text-pink-700',
+      warehouse_manager: 'bg-teal-100 text-teal-700',
+      inventory_planner: 'bg-lime-100 text-lime-700',
+      shipping_coordinator: 'bg-amber-100 text-amber-700',
+      warehouse_worker: 'bg-slate-100 text-slate-700',
+      fleet_manager: 'bg-violet-100 text-violet-700',
+      dispatcher: 'bg-rose-100 text-rose-700',
+      driver: 'bg-sky-100 text-sky-700',
+      maintenance_supervisor: 'bg-stone-100 text-stone-700'
     };
     return colors[role] || 'bg-gray-100 text-gray-700';
   };
@@ -142,7 +247,7 @@ const OrgUserManagement = () => {
       <div className="flex justify-between items-center">
         <div>
           <h2 className="text-2xl font-bold text-gray-900">Organization Users</h2>
-          <p className="text-gray-600">Manage users and their access within Green Valley Farms</p>
+          <p className="text-gray-600">Manage users and their access within the organization</p>
         </div>
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
           <DialogTrigger asChild>

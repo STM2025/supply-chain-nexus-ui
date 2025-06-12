@@ -8,9 +8,67 @@ import { Users, Settings, Shield, Plus, Activity, TrendingUp } from "lucide-reac
 import OrgUserManagement from './OrgUserManagement';
 import OrgModuleAccess from './OrgModuleAccess';
 import OrgResourceManagement from './OrgResourceManagement';
+import ProductScopeManagement from './ProductScopeManagement';
 
-const OrgAdminDashboard = () => {
+const OrgAdminDashboard = ({ organizationType = 'farmer' }) => {
   const [activeTab, setActiveTab] = useState('overview');
+
+  const getOrgConfig = () => {
+    switch (organizationType) {
+      case 'farmer':
+        return {
+          title: 'Farm Organization Dashboard',
+          subtitle: 'Green Valley Farms - Manage users, modules, and access controls',
+          modules: [
+            { name: 'Farm Management', status: 'active', users: 8 },
+            { name: 'Carbon Calculator', status: 'active', users: 5 },
+            { name: 'Provenance Tracking', status: 'active', users: 12 },
+            { name: 'Supply Chain Management', status: 'pending', users: 0 }
+          ]
+        };
+      case 'processor':
+        return {
+          title: 'Processing Organization Dashboard',
+          subtitle: 'Fresh Process Co - Manage processing operations and access',
+          modules: [
+            { name: 'Processing Management', status: 'active', users: 6 },
+            { name: 'Quality Control', status: 'active', users: 4 },
+            { name: 'Supply Chain Management', status: 'active', users: 8 },
+            { name: 'Carbon Calculator', status: 'pending', users: 0 }
+          ]
+        };
+      case 'distributor':
+        return {
+          title: 'Distribution Organization Dashboard',
+          subtitle: 'Quick Distribute - Manage warehousing and distribution',
+          modules: [
+            { name: 'Warehouse Management', status: 'active', users: 5 },
+            { name: 'Supply Chain Management', status: 'active', users: 7 },
+            { name: 'Inventory Tracking', status: 'active', users: 3 },
+            { name: 'Transport Coordination', status: 'pending', users: 0 }
+          ]
+        };
+      case 'transporter':
+        return {
+          title: 'Transport Organization Dashboard',
+          subtitle: 'Fast Trans - Manage fleet and logistics',
+          modules: [
+            { name: 'Fleet Management', status: 'active', users: 4 },
+            { name: 'Route Optimization', status: 'active', users: 3 },
+            { name: 'Supply Chain Management', status: 'active', users: 6 },
+            { name: 'Vehicle Tracking', status: 'pending', users: 0 }
+          ]
+        };
+      default:
+        return {
+          title: 'Organization Dashboard',
+          subtitle: 'Manage users, modules, and access controls',
+          modules: []
+        };
+    }
+  };
+
+  const config = getOrgConfig();
 
   const orgStats = [
     {
@@ -43,13 +101,6 @@ const OrgAdminDashboard = () => {
     }
   ];
 
-  const moduleStatus = [
-    { name: 'Supply Chain Management', status: 'active', users: 8 },
-    { name: 'Carbon Calculator', status: 'active', users: 5 },
-    { name: 'Provenance Tracking', status: 'active', users: 12 },
-    { name: 'Farm Management', status: 'pending', users: 0 }
-  ];
-
   const recentActions = [
     {
       id: 1,
@@ -62,14 +113,14 @@ const OrgAdminDashboard = () => {
       id: 2,
       action: 'Module access granted',
       user: 'Sarah Johnson',
-      details: 'Carbon Calculator',
+      details: config.modules[0]?.name || 'Module',
       timestamp: '3 hours ago'
     },
     {
       id: 3,
       action: 'New user added',
       user: 'Mike Davis',
-      details: 'Farm Worker role',
+      details: 'Worker role',
       timestamp: '1 day ago'
     },
     {
@@ -86,8 +137,8 @@ const OrgAdminDashboard = () => {
       {/* Page Header */}
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Organization Dashboard</h1>
-          <p className="text-gray-600 mt-2">Green Valley Farms - Manage users, modules, and access controls</p>
+          <h1 className="text-3xl font-bold text-gray-900">{config.title}</h1>
+          <p className="text-gray-600 mt-2">{config.subtitle}</p>
         </div>
         <div className="flex space-x-3">
           <Button variant="outline">
@@ -123,11 +174,12 @@ const OrgAdminDashboard = () => {
 
       {/* Main Content Tabs */}
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="overview">Overview</TabsTrigger>
           <TabsTrigger value="users">Users</TabsTrigger>
           <TabsTrigger value="modules">Modules</TabsTrigger>
           <TabsTrigger value="resources">Resources</TabsTrigger>
+          <TabsTrigger value="scopes">Product Scopes</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
@@ -142,7 +194,7 @@ const OrgAdminDashboard = () => {
               </CardHeader>
               <CardContent>
                 <div className="space-y-4">
-                  {moduleStatus.map((module, index) => (
+                  {config.modules.map((module, index) => (
                     <div key={index} className="flex items-center justify-between p-3 rounded-lg bg-gray-50">
                       <div>
                         <p className="text-sm font-medium text-gray-900">{module.name}</p>
@@ -185,15 +237,19 @@ const OrgAdminDashboard = () => {
         </TabsContent>
 
         <TabsContent value="users">
-          <OrgUserManagement />
+          <OrgUserManagement organizationType={organizationType} />
         </TabsContent>
 
         <TabsContent value="modules">
-          <OrgModuleAccess />
+          <OrgModuleAccess organizationType={organizationType} />
         </TabsContent>
 
         <TabsContent value="resources">
-          <OrgResourceManagement />
+          <OrgResourceManagement organizationType={organizationType} />
+        </TabsContent>
+
+        <TabsContent value="scopes">
+          <ProductScopeManagement organizationType={organizationType} />
         </TabsContent>
       </Tabs>
     </div>

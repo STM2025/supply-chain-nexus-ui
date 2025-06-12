@@ -18,14 +18,40 @@ const Index = () => {
       email: 'emma@admin.com',
       role: 'Super Admin',
       organization: 'System Organization',
+      orgType: 'system',
       permissions: ['manage_organizations', 'manage_users', 'control_all_resources']
     },
-    org_admin: {
+    org_admin_farmer: {
       name: 'Maria Gonzalez', 
       email: 'maria@greenvalley.com',
       role: 'Organization Admin',
       organization: 'Green Valley Farms',
+      orgType: 'farmer',
       permissions: ['manage_users', 'manage_modules', 'view_resources']
+    },
+    org_admin_processor: {
+      name: 'Raj Patel',
+      email: 'raj@freshprocess.com',
+      role: 'Organization Admin',
+      organization: 'Fresh Process Co',
+      orgType: 'processor',
+      permissions: ['manage_users', 'manage_modules', 'control_processing']
+    },
+    org_admin_distributor: {
+      name: 'Aisha Khan',
+      email: 'aisha@quickdist.com',
+      role: 'Organization Admin',
+      organization: 'Quick Distribute',
+      orgType: 'distributor',
+      permissions: ['manage_users', 'manage_warehouses', 'approve_shipments']
+    },
+    org_admin_transporter: {
+      name: 'Li Wei',
+      email: 'li@fasttrans.com',
+      role: 'Organization Admin',
+      organization: 'Fast Trans',
+      orgType: 'transporter',
+      permissions: ['manage_users', 'manage_vehicles', 'track_shipments']
     }
   };
 
@@ -36,7 +62,13 @@ const Index = () => {
     if (userType === 'super_admin') {
       setCurrentOrg('system');
     } else {
-      setCurrentOrg('green_valley');
+      const orgTypeMap = {
+        org_admin_farmer: 'green_valley',
+        org_admin_processor: 'fresh_process',
+        org_admin_distributor: 'quick_distribute',
+        org_admin_transporter: 'fast_trans'
+      };
+      setCurrentOrg(orgTypeMap[userType] || 'green_valley');
     }
   };
 
@@ -54,16 +86,22 @@ const Index = () => {
               <Badge variant="outline" className="text-emerald-700 border-emerald-200">
                 {currentProfile.role}
               </Badge>
+              <Badge variant="outline" className="text-blue-700 border-blue-200 capitalize">
+                {currentProfile.orgType}
+              </Badge>
             </div>
             
             <div className="flex items-center space-x-4">
               <Select value={currentUser} onValueChange={handleUserSwitch}>
-                <SelectTrigger className="w-48">
+                <SelectTrigger className="w-56">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="super_admin">Super Admin View</SelectItem>
-                  <SelectItem value="org_admin">Organization Admin View</SelectItem>
+                  <SelectItem value="org_admin_farmer">Farmer Admin View</SelectItem>
+                  <SelectItem value="org_admin_processor">Processor Admin View</SelectItem>
+                  <SelectItem value="org_admin_distributor">Distributor Admin View</SelectItem>
+                  <SelectItem value="org_admin_transporter">Transporter Admin View</SelectItem>
                 </SelectContent>
               </Select>
               
@@ -88,7 +126,7 @@ const Index = () => {
         {currentUser === 'super_admin' ? (
           <SuperAdminDashboard />
         ) : (
-          <OrgAdminDashboard />
+          <OrgAdminDashboard organizationType={currentProfile.orgType} />
         )}
       </main>
     </div>
